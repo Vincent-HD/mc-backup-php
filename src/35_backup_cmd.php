@@ -15,7 +15,8 @@ function is_backup_needed($is_3hr_backup = false) {
     $last_backup_date = get_last_backup_date();
     if ($last_backup_date === false) return true;
     $date_diff = date_diff($current_date, $last_backup_date);
-    if ($is_3hr_backup && $date_diff->h >= 2 && $date_diff->i >= 55 || !$is_3hr_backup) {
+    $diff_minutes = $date_diff->h * 60 + $date_diff->i;
+    if ($is_3hr_backup && $diff_minutes > 175 || !$is_3hr_backup) { // 175 -> 2h55min
         $msg = 'Backup de ' . ($is_3hr_backup) ? '3h':'30min' . ' nécéssaire';
         $log->info($msg);
         return true;
